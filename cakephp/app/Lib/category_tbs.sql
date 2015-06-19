@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.3.11
+-- version 4.4.3
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: 2015 年 6 朁E18 日 18:33
+-- Host: localhost
+-- Generation Time: 2015 年 6 月 19 日 07:34
 -- サーバのバージョン： 5.6.24
--- PHP Version: 5.6.8
+-- PHP Version: 5.5.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -30,7 +30,16 @@ CREATE TABLE IF NOT EXISTS `category_tbs` (
   `id` int(11) NOT NULL,
   `name` varchar(10) NOT NULL,
   `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+--
+-- テーブルのデータのダンプ `category_tbs`
+--
+
+INSERT INTO `category_tbs` (`id`, `name`, `date`) VALUES
+(1, '家電', '2015-06-19 14:15:06'),
+(2, '衣類', '2015-06-19 14:15:34'),
+(3, 'PC', '2015-06-19 14:15:44');
 
 --
 -- Indexes for dumped tables
@@ -50,7 +59,7 @@ ALTER TABLE `category_tbs`
 -- AUTO_INCREMENT for table `category_tbs`
 --
 ALTER TABLE `category_tbs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
