@@ -7,8 +7,12 @@ class ShoppingController extends AppController{
 	// ログインページ-------------------------------------------------------------
 	public function login(){
 		// セッションチェック
-		
+		$logged_in_id = CakeSession::read('account_id');
+		$logged_in_pass = CakeSession::read('account_name');
 
+		if (isset($logged_in_id) && isset($logged_in_pass)) {
+			$this->redirect('shop');
+		}
 	}
 
 	// ログイン処理
@@ -46,6 +50,16 @@ class ShoppingController extends AppController{
 
 	// ショップページ--------------------------------------------------------------
 	public function shop(){
+		//セッションチェック
+		$logged_in_id = CakeSession::read('account_id');
+		$logged_in_pass = CakeSession::read('account_name');
+
+		if (isset($logged_in_id) && isset($logged_in_pass)) {
+
+		}else {
+			$this->redirect('login');
+		}
+
 		// モデルロード
 		$this->loadModel('item_tbs');
 
@@ -73,6 +87,16 @@ class ShoppingController extends AppController{
 
 	// 商品ページ----------------------------------------------------------------
 	public function item(){
+		//セッションチェック
+		$logged_in_id = CakeSession::read('account_id');
+		$logged_in_pass = CakeSession::read('account_name');
+
+		if (isset($logged_in_id) && isset($logged_in_pass)) {
+
+		}else {
+			$this->redirect('login');
+		}
+
 		// モデルロード
 		$this->loadModel('item_tbs');
 
@@ -101,8 +125,20 @@ class ShoppingController extends AppController{
 
 	// カートに商品入れる処理
 	public function add_cart(){
+		//セッションチェック
+		$logged_in_id = CakeSession::read('account_id');
+		$logged_in_pass = CakeSession::read('account_name');
+
+		if (isset($logged_in_id) && isset($logged_in_pass)) {
+
+		}else {
+			$this->redirect('login');
+		}
+
+		//POSTデータ取得
 		$add_cart_info = $this->request->data;
 
+		//カートの中身を呼び、配列に追加
 		$in_cart = CakeSession::read('in_cart');
 		if($in_cart === null){
 			$in_cart = array();
@@ -113,6 +149,7 @@ class ShoppingController extends AppController{
 			'number' => $add_cart_info['add_cart_number']
 		);
 		CakeSession::write('in_cart', $in_cart);
+
 		$this->redirect('cart');
 	}
 
@@ -126,7 +163,17 @@ class ShoppingController extends AppController{
 
 	// カートの商品購入ページ------------------------------------------------------
 	public function cart(){
+		//セッションチェック
+		$logged_in_id = CakeSession::read('account_id');
+		$logged_in_pass = CakeSession::read('account_name');
 
+		if (isset($logged_in_id) && isset($logged_in_pass)) {
+
+		}else {
+			$this->redirect('login');
+		}
+
+		//カートの中身取得
 		$in_cart = CakeSession::read('in_cart');
 		$this->set('in_cart', $in_cart);
 
