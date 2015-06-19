@@ -10,6 +10,22 @@
 </form>
 
 <!-- カートの中身一覧表示 -->
+<pre>
+	<?php var_dump($in_cart); ?>
+</pre>
+<?php foreach ($in_cart as $in_cart_item): ?>
+<div>
+	<div>
+		商品名： <?php echo $in_cart_item['item_name']; ?>
+	</div>
+	<div>
+		金額： <?php echo $in_cart_item['item_price']; ?>
+	</div>
+	<div>
+		個数： <?php echo $in_cart_item['number']; ?>
+	</div>
+</div>
+<?php endforeach; ?>
 
 
 <!-- 戻るボタン -->
