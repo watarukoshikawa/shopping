@@ -1,0 +1,83 @@
+
+ユーザー側
+
+
+
+ーーーーーーーーーーーーーーーーーーーー
+
+管理側
+
+Contloller
+
+	Class内にはindexが必ず存在
+
+	表示テンプレートが１枚なので
+	$this->render()はindex()内に記述
+
+	レンダリングする時は
+	$this->indexを呼んでレンダリングする
+
+
+Template
+
+	Controllerのルールにより
+	formなどのパスに注意が必要
+	action="/shopping/controller/function"
+	のように絶対パスでないと繋がらないこともあるので
+	絶対パスで統一する
+
+
+ーーーーーーーーーーーーーーーーーーーー
+
+データベース
+
+共通
+	hoge_tbs.dateは全テーブルがカラムとして持っているが
+	基本的には
+	NOW() or dete("Y-m-d H:i:s")
+	で現在時刻を入れる
+
+	現在使わない可能性がある所もあるが
+	ソースが完成したら削除していく方針
+
+account_tbs
+
+	is not yet...
+
+item_tbs
+
+	insert時にstock_tbsにもinsertすること
+	stock_tbs.numberは0でinsertをかける
+
+	item_tbs.category_idは
+	必ず結びつくcategory_tbs.idが存在するように
+
+	もしcategory_tbs.idに結びつく物が存在しなかったら
+	item_tbs.category_id = null
+	になるようにする
+
+	現在存在しないカラムだが
+	画像データを保存しておくカラムを追加予定
+
+stock_tbs
+
+	item_tbsのinsert時に
+	stocktbs_number = 0
+	でinsertはされているので
+	在庫操作はupdateで行う
+
+	在庫0でもdeleteしたり
+	stock_tbs.number = null
+	にはならない
+
+category_tbs
+
+	delete実行時に注意
+	category_tbs.idがなくなるので
+	item_tbs.category_id = null
+	にupdateすること
+
+history_tbs
+
+	is not yet ...
+
