@@ -10,10 +10,7 @@
 </form>
 
 <!-- カートの中身一覧表示 -->
-<pre>
-	<?php var_dump($in_cart); ?>
-</pre>
-<?php foreach ($in_cart as $in_cart_item): ?>
+<?php foreach ($in_cart as $session_id => $in_cart_item): ?>
 <div>
 	<div>
 		商品名： <?php echo $in_cart_item['item_name']; ?>
@@ -25,6 +22,10 @@
 		個数： <?php echo $in_cart_item['number']; ?>
 	</div>
 </div>
+<form class="delete_cart_form" action="delete_cart" method="POST">
+	<input type="hidden" name="delete_item" value="<?php echo $session_id; ?>">
+	<input type="submit" name="delete_cart_btn" value="削除">
+</form>
 <?php endforeach; ?>
 
 

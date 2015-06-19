@@ -7,7 +7,7 @@ class ShoppingController extends AppController{
 	// ログインページ-------------------------------------------------------------
 	public function login(){
 		// セッションチェック
-
+		
 
 	}
 
@@ -116,9 +116,17 @@ class ShoppingController extends AppController{
 		$this->redirect('cart');
 	}
 
+	// カートの商品削除処理
+	public function delete_cart(){
+		$delete_info = $this->request->data;
+		CakeSession::delete('in_cart.'.$delete_info['delete_item']);
+
+		$this->redirect('cart');
+	}
+
 	// カートの商品購入ページ------------------------------------------------------
 	public function cart(){
-		//
+
 		$in_cart = CakeSession::read('in_cart');
 		$this->set('in_cart', $in_cart);
 
