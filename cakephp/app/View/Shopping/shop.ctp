@@ -1,23 +1,37 @@
 
-<!-- ログアウトボタン -->
-<form class="logout_btn_form" action="run_logout" method="POST">
-	<input type="submit" name="logout_btn" value="ログアウト">
-</form>
-
-<!-- カートボタン -->
-<form class="cart_btn_form" action="cart" method="POST">
-	<input type="submit" name="cart_btn" value="カートへ">
-</form>
+<div id="header_box">
+	<!-- ログアウトボタン -->
+	<div style="float:left">
+		<form class="logout_btn_form" action="run_logout" method="POST">
+			<input type="submit" name="logout_btn" value="ログアウト">
+		</form>
+	</div>
+	<!-- カートボタン -->
+	<div style="float:right">
+		<form class="cart_btn_form" action="cart" method="POST">
+			<input type="submit" name="cart_btn" value="カートへ">
+		</form>
+	</div>
+</div>
 
 <!-- 検索フォーム -->
 <form class="search_shop_form" action="search_shop" method="POST">
-	カテゴリ：
-	<select name="category_select">
-		<option value="all">全て</option>
-	</select>
-	在庫：
-	あり<input type="radio" name="stock_yes">
-	全て<input type="radio" name="stock_all" checked="checked">
+	<div>
+		カテゴリ：
+		<select name="category_select">
+			<option value="all">全て</option>
+			<?php foreach ($categories as $category): ?>
+				<option value="<?php echo $category['category_tbs']['name']; ?>">
+					<?php echo $category['category_tbs']['name']; ?>
+				</option>
+			<?php endforeach; ?>
+		</select>
+	</div>
+	<div>
+		在庫：
+			<div><input type="radio" name="stock" value="yes">あり</div>
+			<div><input type="radio" name="stock" value="all" checked="checked">全て</div>
+	</div>
 	<input type="submit" name="search_shop_btn" value="検索">
 </form>
 

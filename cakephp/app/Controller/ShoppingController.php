@@ -62,26 +62,90 @@ class ShoppingController extends AppController{
 
 		// モデルロード
 		$this->loadModel('item_tbs');
+		$this->loadModel('category_tbs');
+
+		//カテゴリー一覧取得
+		$res = $this->category_tbs->find('all');
+		$this->set('categories', $res);
 
 		// 商品一覧取得
 		$sql = "
-				SELECT
-					item_tbs.id AS item_id,
-					item_tbs.name AS item_name,
-					category_tbs.name AS category_name
-				FROM
-					item_tbs
-				LEFT JOIN
-					category_tbs
-				ON
-					item_tbs.category_id = category_tbs.id
-				";
+			SELECT
+				item_tbs.id AS item_id,
+				item_tbs.name AS item_name,
+				category_tbs.name AS category_name
+			FROM
+				item_tbs
+			LEFT JOIN
+				category_tbs
+			ON
+				item_tbs.category_id = category_tbs.id
+			";
 		$res = $this->item_tbs->query($sql);
 		$this->set('items', $res);
 	}
 
 	// ショップ検索
 	public function search_shop(){
+		//POSTデータ取得
+		$search_data = $this->request->data;
+
+		//モデルロード
+		$this->loadModel('item_tbs');
+		$this->loadModel('category_tbs');
+
+		//カテゴリー一覧取得
+		$res = $this->category_tbs->find('all');
+		$this->set('categories', $res);
+
+		//検索処理
+		$sql = "
+			SELECT
+				item_tbs.id AS item_id,
+				item_tbs.name AS item_name,
+				category_tbs.name AS category_name
+			FROM
+				item_tbs
+			LEFT JOIN
+				stock_tbs
+			ON
+				stock_tbs.item_id = item_tbs.id
+			LEFT JOIN
+				category_tbs
+			ON
+				item_tbs.category_id = category_tbs.id
+			";
+
+		// WHERE文をくっつける
+		// カテゴリ選択
+		if ($search_data['category_select'] == 'all') {
+			// 全ての場合
+			$mode_where = 0;
+
+		}else {
+			$mode_where = 1;
+			$sql .= "
+				WHERE
+					category_tbs.name = '".$search_data['category_select']."'
+				";
+		}
+		//在庫有り無\\
+		if ($search_data['stock'] == 'yes') {
+			if ($mode_where == 0) {
+				$sql .= "WHERE";
+			}else {
+				$sql .= ",";
+			}
+			$sql .= "
+				stock_tbs.number > 0
+				";
+		} else {
+
+		}
+
+		$res = $this->item_tbs->query($sql);
+		$this->set('items', $res);
+
 		$this->render('shop');
 	}
 
