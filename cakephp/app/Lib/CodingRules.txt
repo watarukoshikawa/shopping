@@ -1,7 +1,11 @@
 
 ユーザー側
 
+Controller
 
+	Viewそれぞれのfunctionが存在。
+	基本はその他の関数で処理後にredirectで飛ばす形。
+	search_shop()のアクションのみrenderで処理後のページを描写している。
 
 ーーーーーーーーーーーーーーーーーーーー
 
@@ -80,4 +84,3 @@ category_tbs
 history_tbs
 
 	is not yet ...
-
