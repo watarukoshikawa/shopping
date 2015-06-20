@@ -1,5 +1,21 @@
 
-<div id="header_box">
+<style>
+	div#header_btn{
+		width: 1000px;
+		margin: 20px auto;
+	}
+	div#table_area{
+		width: 1000px;
+		margin: 20px auto;
+	}
+	div#search_area{
+		width: 500px;
+		margin: 100px auto 50px;
+	}
+</style>
+
+
+<div id="header_btn">
 	<!-- ログアウトボタン -->
 	<div style="float:left">
 		<form class="logout_btn_form" action="run_logout" method="POST">
@@ -15,44 +31,54 @@
 </div>
 
 <!-- 検索フォーム -->
-<form class="search_shop_form" action="search_shop" method="POST">
-	<div>
-		カテゴリ：
-		<select name="category_select">
-			<option value="all">全て</option>
-			<?php foreach ($categories as $category): ?>
-				<option value="<?php echo $category['category_tbs']['name']; ?>">
-					<?php echo $category['category_tbs']['name']; ?>
-				</option>
-			<?php endforeach; ?>
-		</select>
-	</div>
-	<div>
-		在庫：
-			<div><input type="radio" name="stock" value="yes">あり</div>
-			<div><input type="radio" name="stock" value="all" checked="checked">全て</div>
-	</div>
-	<input type="submit" name="search_shop_btn" value="検索">
-</form>
+<div id="search_area">
+	<form class="search_shop_form" action="search_shop" method="POST">
+		<table>
+			<tr>
+				<th>カテゴリ：</th>
+				<td>
+					<select name="category_select">
+						<option value="all">全て</option>
+						<?php foreach ($categories as $category): ?>
+							<option value="<?php echo $category['category_tbs']['name']; ?>">
+								<?php echo $category['category_tbs']['name']; ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>在庫：</th>
+				<td><input type="radio" name="stock" value="yes">あり</td>
+				<td><input type="radio" name="stock" value="all" checked="checked">全て</td>
+			</tr>
+			<tr>
+				<td colspan="3" style="text-align:center"><input type="submit" name="search_shop_btn" value="検索"></td>
+			</tr>
+		</table>
+	</form>
+</div>
 
 <!-- 商品一覧表示 -->
-<table>
-	<tr>
-		<th>写真</th><th>カテゴリ名</th><th>商品名</th>
-	</tr>
-	<?php foreach($items as $item): ?>
-	<tr>
-		<td>
-			<!-- 写真表示予定 -->
-		</td>
-		<td>
-			<?php echo $item['category_tbs']['category_name'];?>
-		</td>
-		<td>
-			<a href="item?item=<?php echo $item['item_tbs']['item_id']; ?>">
-				<?php echo $item['item_tbs']['item_name']; ?>
-			</a>
-		</td>
-	</tr>
-	<?php endforeach; ?>
-</table>
+<div id="table_area">
+	<table>
+		<tr>
+			<th>写真</th><th>カテゴリ名</th><th>商品名</th>
+		</tr>
+		<?php foreach($items as $item): ?>
+		<tr>
+			<td>
+				<!-- 写真表示予定 -->
+			</td>
+			<td>
+				<?php echo $item['category_tbs']['category_name'];?>
+			</td>
+			<td>
+				<a href="item?item=<?php echo $item['item_tbs']['item_id']; ?>">
+					<?php echo $item['item_tbs']['item_name']; ?>
+				</a>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+	</table>
+</div>
