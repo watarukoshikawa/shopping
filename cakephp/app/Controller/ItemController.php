@@ -19,6 +19,7 @@ class ItemController extends AppController{
 	}
 
 	public function run_regist(){
+		//item_tbs への登録
 		$this->loadModel('item_tb');
 		$insert = 	array(
 						'name' => $this->request->data['name'],
@@ -28,7 +29,18 @@ class ItemController extends AppController{
 						'category_id' => $this->request->data['category_id']
 					);
 		$this->item_tb->set($insert);
+
 		$this->item_tb->save();
+
+		//stock_tbs への登録
+		$this->loadModel('stock_tb');
+		$insert =	array(
+						'number' => 0,
+						'item_id' => $this->item_tb->getLastInsertID(),
+						'date' => date('Y-m-d H:i:s')
+					);
+		$this->stock_tb->set($insert);	
+		$this->stock_tb->save();
 
 		$this->set('msg', $this->request->data['name']."を登録しました");
 
@@ -42,6 +54,15 @@ class ItemController extends AppController{
 		$data = $this->category_tb->find('all',array('fields' => array('category_tb.name', 'category_tb.id')));
 		$this->set('select',$data);
 		$this->render('regist');
+
+	}
+
+	public function run_delete(){
+		$this->loadModel('item_tb');
+		$this->item_tb->delete($this->request->data('delete_id'));
+		$this->set('msg',$this->request->data['delete_name'] ."を削除しました");
+
+		$this->index();
 
 	}
 }

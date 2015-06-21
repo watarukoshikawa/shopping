@@ -6,6 +6,11 @@
 </style>
 
 <div id="main_area">
+	<div id="button_area">
+		<form action="/shopping/cakephp/master" method="POST">
+			<input type="submit" value="戻る">
+		</form>
+	</div>
 	<div id="form_area">
 		<form action="/shopping/cakephp/category/run_regist" method="POST">
 			<p>カテゴリー名:</p>
