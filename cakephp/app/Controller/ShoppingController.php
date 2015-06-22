@@ -161,11 +161,17 @@ class ShoppingController extends AppController{
 			$this->redirect('login');
 		}
 
+
 		// モデルロード
 		$this->loadModel('item_tbs');
 
 		// 商品情報取得
 		$item_id = $this->request->query;
+
+		// GETがなかったらshoppingに飛ばす
+		if ($item_id == null) {
+			$this->redirect('shop');
+		}
 
 		$sql = "
 				SELECT
@@ -208,6 +214,7 @@ class ShoppingController extends AppController{
 			$in_cart = array();
 		}
 		$in_cart[] = array(
+			'item_id' => $add_cart_info['add_cart_id'],
 			'item_name' => $add_cart_info['add_cart_name'],
 			'item_price' => $add_cart_info['add_cart_price'],
 			'number' => $add_cart_info['add_cart_number']
@@ -245,6 +252,86 @@ class ShoppingController extends AppController{
 
 	//購入処理
 	public function buy_items(){
+
+		$order_account = CakeSession::read('account_id');
+		$order_items = CakeSession::read('in_cart');
+
+		// オーダーの合計金額を出す
+		$order_price = 0;
+		foreach ($order_items as $order_item) {
+			$order_price += $order_item['item_price'] * $order_item['number'];
+		}
+
+		$this->loadModel('account_tbs');
+		$this->loadModel('stock_tbs');
+		$this->loadModel('history_tbs');
+
+		// 在庫の数＞オーダーの数
+		foreach ($order_items as $order_item) {
+			// 在庫の数取得
+			$where = array(
+					'conditions' => array('id' => $order_item['id'])
+					);
+			$res = $this->stock_tbs->find('all', $where);
+
+			if ($res['stock_tbs']['number'] >= $order_item['number']) {
+				// 在庫の数減らす
+				$sql = "
+					UPDATE
+						stock_tbs
+					SET
+						stock_tbs.number = stock_tbs.number - ".$order_item['number']."
+					WHERE
+						stock_tbs.item_id = ".$order_item['item_id']."
+				";
+
+				$this->stock_tbs->query($sql);
+
+			}else {
+				echo "在庫の数が足りません";
+			}
+		}
+
+		// オーダーの合計金額＞ユーザー残金
+		// ユーザー残金取得
+		$where = array(
+				'conditions' => array('id' => $order_account)
+				);
+		$res = $this->account_tbs->find('all',$where);
+
+		if ($res['account_tbs']['money'] >= $order_price) {
+			// アカウントの残金減らす
+			$sql="
+				UPDATE
+					account_tbs
+				SET
+					account_tbs.money = account_tbs.money - ".$order_price."
+				WHERE
+					account_tbs.id = ".$order_account."
+			";
+
+			$this->account_tbs->query($sql);
+
+		}else {
+			echo "残金が足りません";
+		}
+
+		// ヒストリーにいれる
+		foreach ($order_items as $order_item) {
+			$sql = "
+				INSERT INTO
+					history_tbs
+					(number, date, account_id, item_id)
+				VALUES
+					(".$order_item['number'].", NOW(), ".$order_account.", ".$order_item['item_id'].")
+			";
+
+			$this->history_tbs->query($sql);
+		}
+
+		// カートの中身を消す
+		CakeSession::delete('in_cart');
+
 		$this->redirect('shop');
 	}
 }

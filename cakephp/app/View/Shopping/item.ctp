@@ -65,6 +65,7 @@
 <div id="add_cart_area">
 	<!-- カートに入れるボタン -->
 	<form class="add_cart_form" action="add_cart" method="POST">
+		<input type="hidden" name="add_cart_id" value="<?php echo $item_info['item_tbs']['item_id']; ?>">
 		<input type="hidden" name="add_cart_name" value="<?php echo $item_info['item_tbs']['item_name']; ?>">
 		<input type="hidden" name="add_cart_price" value="<?php echo $item_info['item_tbs']['item_price']; ?>">
 			<select name="add_cart_number">
