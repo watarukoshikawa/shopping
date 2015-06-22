@@ -34,19 +34,23 @@
 			</tr>
 			<?php foreach($table_data as $data): ?>
 			<tr>
-				<td><?php echo $data['account_tb']['id'] ?></td>
-				<td><?php echo $data['account_tb']['name'] ?></td>
+				<td><?php echo $data['account_tb']['id']; ?></td>
+				<td>
+					<a href="/shopping/cakephp/user/show_update?update_id=<?php echo $data['account_tb']['id']; ?>">
+						<?php echo $data['account_tb']['name'] ?>
+					</a>
+				</td>
 				<td>
 					<form action="/shopping/cakephp/user/show_history" method="POST">
-						<input type="hidden" name="history_id" value="<?php echo $data['account_tb']['id'] ?>">
+						<input type="hidden" name="history_id" value="<?php echo $data['account_tb']['id']; ?>">
 						<input type="submit" name="history" value="参照">
 					</form>
 					
 				</td>
 				<td>
 					<form action="/shopping/cakephp/user/run_delete" method="POST">
-						<input type="hidden" name="delete_id" value="<?php echo $data['account_tb']['id'] ?>">
-						<input type="hidden" name="delete_name" value="<?php echo $data['account_tb']['name'] ?>">
+						<input type="hidden" name="delete_id" value="<?php echo $data['account_tb']['id']; ?>">
+						<input type="hidden" name="delete_name" value="<?php echo $data['account_tb']['name']; ?>">
 						<input type="submit" name="delete" value="削除">
 					</form>
 				</td>

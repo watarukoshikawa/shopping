@@ -135,6 +135,54 @@ class UserController extends AppController{
 			$this->show_history();
 		}
 	}
+
+	public function show_update(){
+		$this->loadModel('account_tb');
+		if(isset($this->request->query['update_id'])){
+			$this->set('update_data',$this->account_tb->find('first', $this->request->query['update_id']));
+		}else{
+			$this->set('update_data',$this->account_tb->find('first', $this->request->data['regist_id']));	
+		}
+		$this->render('regist');
+	}
+
+	public function run_update(){
+		$this->loadModel('account_tb');
+		if($this->request->data['forcs_id'] == $this->request->data['regist_id']){
+			$sql = 	"
+					UPDATE
+						account_tbs
+					SET
+						id = ".$this->request->data['regist_id'].",
+						name = '".$this->request->data['regist_name']."',
+						pass = '".$this->request->data['regist_pass']."'
+					WHERE
+						id = ".$this->request->data['forcs_id'];
+			$this->account_tb->query($sql);
+			$this->set('msg',$this->request->data['regist_name']."を変更しました");
+			$this->index();
+
+		}else{
+			if ($this->account_tb->find('first',array('conditions' => array('account_tb.id' => $this->request->data['regist_id'])))) {
+				$this->set('msg',"登録済みのIDです");
+				$this->show_update();
+			}else{
+				$sql = 	"
+						UPDATE
+							account_tbs
+						SET
+							id = ".$this->request->data['regist_id'].",
+							name = '".$this->request->data['regist_name']."',
+							pass = '".$this->request->data['regist_pass']."'
+						WHERE
+							id = ".$this->request->data['forcs_id'];
+				$this->account_tb->query($sql);
+				$this->set('msg',$this->request->data['regist_name']."を変更しました");
+				$this->index();
+			}
+		}
+
+	}
 };
 
 
