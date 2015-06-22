@@ -13,6 +13,19 @@ class ShoppingController extends AppController{
 		if (isset($logged_in_id) && isset($logged_in_pass)) {
 			$this->redirect('shop');
 		}
+
+		if (isset($this->request->query)) {
+			$res = $this->request->query;
+			if ($res == null) {
+
+			}elseif ($res['login'] == 'failed') {
+				// ログイン失敗時
+				$this->set('msg', 'ログインに失敗しました。');
+			}elseif ($res['login'] == 'logout') {
+				// ログアウト時
+				$this->set('msg', 'ログアウトしました。');
+			}
+		}
 	}
 
 	// ログイン処理
@@ -37,7 +50,7 @@ class ShoppingController extends AppController{
 			$this->redirect('shop');
 		}else {
 			// ログイン失敗
-			$this->redirect('login');
+			$this->redirect('login?login=failed');
 		}
 	}
 
@@ -46,7 +59,7 @@ class ShoppingController extends AppController{
 		CakeSession::delete('account_id');
 		CakeSession::delete('account_name');
 		CakeSession::delete('in_cart');
-		$this->redirect('login');
+		$this->redirect('login?login=logout');
 	}
 
 	// ショップページ--------------------------------------------------------------
@@ -59,6 +72,16 @@ class ShoppingController extends AppController{
 
 		}else {
 			$this->redirect('login');
+		}
+
+		if (isset($this->request->query)) {
+			$res = $this->request->query;
+			if ($res == null) {
+				//通常時　何も処理しない。
+			}elseif ($res['order'] == 'completed') {
+				// 購入完了から飛んできたとき
+				$this->set('msg', '購入完了');
+			}
 		}
 
 		// モデルロード
@@ -208,14 +231,20 @@ class ShoppingController extends AppController{
 			if($in_cart === null){
 				$in_cart = array();
 			}
-			$in_cart[] = array(
-				'item_id' => $add_cart_info['add_cart_id'],
-				'item_name' => $add_cart_info['add_cart_name'],
-				'item_price' => $add_cart_info['add_cart_price'],
-				'number' => $add_cart_info['add_cart_number']
-			);
-			CakeSession::write('in_cart', $in_cart);
+			if (isset($in_cart[$add_cart_info['add_cart_id']])) {
+				// すでにカートに入ってる商品は個数を足し算
+				$in_cart[$add_cart_info['add_cart_id']]['number'] = $in_cart[$add_cart_info['add_cart_id']]['number'] + $add_cart_info['add_cart_number'];
+			}else {
+				// カートに入ってない商品は配列に新しく入れる
+				$in_cart[$add_cart_info['add_cart_id']] = array(
+					'item_id' => $add_cart_info['add_cart_id'],
+					'item_name' => $add_cart_info['add_cart_name'],
+					'item_price' => $add_cart_info['add_cart_price'],
+					'number' => $add_cart_info['add_cart_number']
+				);
+			}
 
+			CakeSession::write('in_cart', $in_cart);
 		}
 
 		$this->redirect('cart');
@@ -283,10 +312,14 @@ class ShoppingController extends AppController{
 				";
 
 			}else {
-				echo "在庫の数が足りません";
+			 	$msg[] = "
+					在庫の数が足りません
+					現在の在庫：".$res[0]['stock_tbs']['number']."
+					購入個数：".$order_item['number']."
+					";
 			}
 		}
-		// オーダーの合計金額<ユーザー残金
+		// ユーザー残金＞オーダー合計金額
 		// ユーザー残金取得
 		$where = array(
 				'conditions' => array('id' => $order_account)
@@ -305,7 +338,11 @@ class ShoppingController extends AppController{
 			";
 
 		}else {
-			echo "残金が足りません";
+			$msg[] = "
+				残金が足りません
+				現在残金：".$res[0]['account_tbs']['money']."
+				購入合計金額：".$order_price."
+				";
 		}
 
 		if (isset($sql1) && isset($sql2)) {
@@ -327,11 +364,11 @@ class ShoppingController extends AppController{
 			}
 			// カートの中身を消す
 			CakeSession::delete('in_cart');
+			$this->redirect('shop?order=completed');
 		}else {
-			echo "failed";
+			$this->set('msg', $msg);
+			$this->render('order_failed');
 		}
-
-		$this->redirect('shop');
 	}
 }
 ?>
