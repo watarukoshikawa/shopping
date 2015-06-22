@@ -17,11 +17,20 @@
 		</form>
 	</div>
 	<div id="regist_area">
+		<?php if(isset($update_data)): ?>
+		<form action="/shopping/cakephp/user/run_update" method="POST">
+				<input type="hidden" name="forcs_id" value="<?php echo $update_data['account_tb']['id']; ?>">
+				ID<input type="text" name="regist_id" value="<?php echo $update_data['account_tb']['id']; ?>">
+				名前<input type="text" name="regist_name" value="<?php echo $update_data['account_tb']['name']; ?>">
+				パスワード<input type="text" name="regist_pass" value="<?php echo $update_data['account_tb']['pass']; ?>">
+				<input type="submit" value="変更">
+		<?php else: ?>
 		<form action="/shopping/cakephp/user/run_regist" method="POST">
-			ID<input type="text" name="regist_id">
-			名前<input type="text" name="regist_name">
-			パスワード<input type="text" name="regist_pass">
+				ID<input type="text" name="regist_id">
+				名前<input type="text" name="regist_name">
+				パスワード<input type="text" name="regist_pass">
 			<input type="submit" value="登録">
+			<?php endif; ?>
 		</form>
 	</div>
 </div>
