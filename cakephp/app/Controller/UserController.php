@@ -59,8 +59,88 @@ class UserController extends AppController{
 					history_tbs.item_id = item_tbs.id 
 				WHERE 
 					history_tbs.account_id = ".$this->request->data['history_id']."
+				ORDER BY
+					history_tbs.date
+				DESC
 		";
 		$this->set('table_data', $this->history_tb->query($sql));
+		$this->set('select_id',$this->request->data['history_id']);
 		$this->render('history');
 	}
+
+	public function run_select(){
+		$this->loadModel('history_tb');
+		$sql = "
+				SELECT 
+					history_tbs.date, 
+					item_tbs.name, 
+					history_tbs.number, 
+					item_tbs.price 
+				FROM 
+					history_tbs 
+				INNER JOIN
+					item_tbs
+				ON
+					history_tbs.item_id = item_tbs.id 
+				WHERE 
+					history_tbs.account_id = ".$this->request->data['select_id'];
+
+
+		if (isset($this->request->data['select_from']) && isset($this->request->data['select_to'])) {
+			
+			if ($this->request->data['select_from'] != "" && $this->request->data['select_to'] != "") {
+				$sql .= "
+					AND 
+						history_tbs.date
+					BETWEEN
+						'".$this->request->data['select_from']."'
+					AND
+						'".$this->request->data['select_to']."'
+					ORDER BY
+						history_tbs.date
+					DESC
+					";
+			}else{
+
+				if ($this->request->data['select_from'] != "") {
+					$sql .="
+						AND
+							history_tbs.date >= '".$this->request->data['select_from']."'
+						ORDER BY
+							history_tbs.date
+						DESC
+					";
+				}elseif ($this->request->data['select_to'] != "") {
+					$sql .="
+						AND
+							history_tbs.date <= '".$this->request->data['select_to']."'
+						ORDER BY
+							history_tbs.date
+						DESC
+					";
+
+				}else{
+					$sql .= "
+						ORDER BY
+							history_tbs.date
+						DESC					
+					";
+				}
+			}
+			$this->set('table_data', $this->history_tb->query($sql));
+			$this->set('select_id',$this->request->data['select_id']);
+			$this->render('history');
+
+		}else{
+			$this->show_history();
+		}
+	}
 };
+
+
+
+
+
+
+
+
