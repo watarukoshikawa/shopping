@@ -69,6 +69,7 @@
 		<input type="hidden" name="add_cart_name" value="<?php echo $item_info['item_tbs']['item_name']; ?>">
 		<input type="hidden" name="add_cart_price" value="<?php echo $item_info['item_tbs']['item_price']; ?>">
 			<select name="add_cart_number">
+				<option>0</option>
 				<?php for ($i=0; $i < $item_info['stock_tbs']['item_stock']; $i++) {
 					$number = $i + 1;
 					echo '<option>'.$number.'</option>';
