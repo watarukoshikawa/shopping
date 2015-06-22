@@ -25,17 +25,32 @@ class StockController extends AppController{
 	}
 
 	public function run_regist(){
-		echo "<pre>";
-		var_dump($this->request->data);
-		echo "</pre>";
-		exit;
-		/*
-			POSTで入ってくる値を配列にし
-			item_tbs.idとstock_tbs_item_id
-			を関連つけられるように渡してあるので
-			それを考慮しupdate文を発行
+		$this->loadModel('stock_tb');
+		foreach ($this->request->data as $data) {
+			if(isset($data['number']) && $data['number'] != ""){
 
-			DBへの接続回数を気にするか考慮が必要
-		*/
+				$sqls[] =	"
+						UPDATE
+							stock_tbs
+						SET
+							stock_tbs.number = ".$data['number']."
+						WHERE
+							stock_tbs.item_id = ".$data['item_id'];
+			}else{
+				$err = "空白の項目があります";
+			}
+		}
+		if(isset($err)){
+			$this->set('msg',$err);
+			$this->index();
+		}else{
+			foreach ($sqls as $sql ) {
+				$this->stock_tb->query($sql);
+				$this->set('msg',"変更しました");
+			}
+			$this->index();
+		}
+
+		
 	}
 }

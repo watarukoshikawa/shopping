@@ -1,4 +1,10 @@
 <div id="main_area">
+	<?php
+		if(isset($msg) && $msg != ""){
+			print("<h1>".$msg."</h1>");
+		}
+	?>
+
 	<div id="button_area">
 		<form action="/shopping/cakephp/master" method="POST">
 			<input type="submit" value="戻る">
