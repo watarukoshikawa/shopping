@@ -139,9 +139,11 @@ class UserController extends AppController{
 	public function show_update(){
 		$this->loadModel('account_tb');
 		if(isset($this->request->query['update_id'])){
-			$this->set('update_data',$this->account_tb->find('first', $this->request->query['update_id']));
+			$where = array('conditions' => array('account_tb.id' => $this->request->query['update_id']));
+			$this->set('update_data',$this->account_tb->find('first', $where));
 		}else{
-			$this->set('update_data',$this->account_tb->find('first', $this->request->data['regist_id']));	
+			$where = array('conditions' => array('account_tb.id' => $this->request->data['regist_id']));
+			$this->set('update_data',$this->account_tb->find('first', $where));	
 		}
 		$this->render('regist');
 	}
@@ -155,7 +157,8 @@ class UserController extends AppController{
 					SET
 						id = ".$this->request->data['regist_id'].",
 						name = '".$this->request->data['regist_name']."',
-						pass = '".$this->request->data['regist_pass']."'
+						pass = '".$this->request->data['regist_pass']."',
+						money = '".$this->request->data['regist_money']."'
 					WHERE
 						id = ".$this->request->data['forcs_id'];
 			$this->account_tb->query($sql);
@@ -165,7 +168,7 @@ class UserController extends AppController{
 		}else{
 			if ($this->account_tb->find('first',array('conditions' => array('account_tb.id' => $this->request->data['regist_id'])))) {
 				$this->set('msg',"登録済みのIDです");
-				$this->show_update();
+				$this->index();
 			}else{
 				$sql = 	"
 						UPDATE
@@ -173,10 +176,18 @@ class UserController extends AppController{
 						SET
 							id = ".$this->request->data['regist_id'].",
 							name = '".$this->request->data['regist_name']."',
-							pass = '".$this->request->data['regist_pass']."'
+							pass = '".$this->request->data['regist_pass']."',
+							money = '".$this->request->data['regist_money']."'
 						WHERE
 							id = ".$this->request->data['forcs_id'];
 				$this->account_tb->query($sql);
+
+				$this->loadModel('history_tb');
+				$this->history_tb->updateAll(
+										array('history_tb.account_id' => $this->request->data['regist_id']),
+										array('history_tb.account_id =' => $this->request->data['forcs_id'])
+					);
+
 				$this->set('msg',$this->request->data['regist_name']."を変更しました");
 				$this->index();
 			}

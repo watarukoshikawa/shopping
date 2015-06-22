@@ -29,6 +29,7 @@
 			<tr>
 				<th>ID</th>
 				<th>ユーザー名</th>
+				<th>残金</th>
 				<th>履歴</th>
 				<th>削除</th>
 			</tr>
@@ -40,6 +41,7 @@
 						<?php echo $data['account_tb']['name'] ?>
 					</a>
 				</td>
+				<td><?php echo $data['account_tb']['money'] ?>円</td>
 				<td>
 					<form action="/shopping/cakephp/user/show_history" method="POST">
 						<input type="hidden" name="history_id" value="<?php echo $data['account_tb']['id']; ?>">
