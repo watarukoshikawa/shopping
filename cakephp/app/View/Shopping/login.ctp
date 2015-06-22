@@ -1,7 +1,7 @@
 
 <style>
-	#login_box{
-		width: 500px;
+	div#login_box{
+		width: 300px;
 		margin: auto;
 	}
 	.login_form{
@@ -14,8 +14,18 @@
 	#login_btn{
 		margin: 0px 25px;
 	}
+	div#msg_box{
+		text-align: center;
+		font-size: 16px;
+		color: #ff0000;
+	}
 </style>
 
+<div id="msg_box">
+	<?php
+		echo isset($msg)? $msg : '';
+	?>
+</div>
 <div id="login_box">
 	<form class="login_form" action="run_login" method="POST">
 		<div class="text_box">ID:<input type="text" name="login_id" value=""></div>

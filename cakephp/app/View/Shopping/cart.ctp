@@ -9,10 +9,32 @@
 		margin: 100px auto 20px;
 	}
 	div#buy_btn_area{
+		height: 20px;
 		width: 50px;
 		margin: 10px auto;
 	}
+	div#total_price_area{
+		height: 20px;
+		width: 500px;
+		font-size: 20px;
+		text-align: right;
+		padding-top: 15px;
+	}
+	div#order_area{
+		width: 600px;
+		margin: 30px auto;
+	}
 </style>
+
+<script>
+	function order_check () {
+		if (window.confirm("購入しますか？")) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+</script>
 
 <div id="header_btn">
 	<div style="float:left;">
@@ -34,6 +56,7 @@
 
 <div id="in_cart_area">
 	<!-- カートの中身一覧表示 -->
+	<?php $total_price = 0; ?>
 	<?php if (isset($in_cart)): ?>
 	<?php foreach ($in_cart as $session_id => $in_cart_item): ?>
 	<table>
@@ -55,13 +78,20 @@
 			</td>
 		</tr>
 	</table>
+	<?php $total_price = $total_price + $in_cart_item['item_price'] * $in_cart_item['number']; ?>
 	<?php endforeach; ?>
 	<?php endif; ?>
 </div>
 
-<div id="buy_btn_area">
-	<!-- 購入ボタン -->
-	<form class="buy_item_form" action="buy_items" method="POST">
-		<input type="submit" name="buy_item_btn" value="購入">
-	</form>
+<div id="order_area">
+	<div id="total_price_area" style="float:left">
+		<!-- 合計金額表示 -->
+		合計：<?php echo $total_price ?>円
+	</div>
+	<div id="buy_btn_area" style="float:right">
+		<!-- 購入ボタン -->
+		<form class="buy_item_form" action="buy_items" method="POST" onsubmit="return order_check()">
+			<input type="submit" name="buy_item_btn" value="購入">
+		</form>
+	</div>
 </div>

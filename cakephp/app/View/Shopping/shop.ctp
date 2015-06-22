@@ -12,8 +12,30 @@
 		width: 500px;
 		margin: 100px auto 50px;
 	}
+	div#msg_box{
+		text-align: center;
+
+	}
+	div#msg_box{
+		text-align: center;
+		font-size: 16px;
+		color: #0000ff;
+	}
+	table#search_table{
+		border-collapse: collapse;
+		border: solid;
+	}
+	table#search_table td{
+		border-bottom: solid;
+		font-size: 15px;
+	}
 </style>
 
+<div id="msg_box">
+	<?php
+		echo isset($msg)? $msg : '';
+	?>
+</div>
 
 <div id="header_btn">
 	<!-- ログアウトボタン -->
@@ -33,10 +55,10 @@
 <!-- 検索フォーム -->
 <div id="search_area">
 	<form class="search_shop_form" action="search_shop" method="POST">
-		<table>
+		<table id="search_table">
 			<tr>
-				<th>カテゴリ：</th>
-				<td>
+				<td>カテゴリ：</td>
+				<td colspan="2">
 					<select name="category_select">
 						<option value="all">全て</option>
 						<?php foreach ($categories as $category): ?>
@@ -48,7 +70,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>在庫：</th>
+				<td>在庫：</td>
 				<td><input type="radio" name="stock" value="yes">あり</td>
 				<td><input type="radio" name="stock" value="all" checked="checked">全て</td>
 			</tr>
