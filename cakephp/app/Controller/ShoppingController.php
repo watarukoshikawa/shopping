@@ -45,6 +45,7 @@ class ShoppingController extends AppController{
 	public function run_logout(){
 		CakeSession::delete('account_id');
 		CakeSession::delete('account_name');
+		CakeSession::delete('in_cart');
 		$this->redirect('login');
 	}
 
@@ -195,33 +196,30 @@ class ShoppingController extends AppController{
 
 	// カートに商品入れる処理
 	public function add_cart(){
-		//セッションチェック
-		$logged_in_id = CakeSession::read('account_id');
-		$logged_in_pass = CakeSession::read('account_name');
-
-		if (isset($logged_in_id) && isset($logged_in_pass)) {
-
-		}else {
-			$this->redirect('login');
-		}
 
 		//POSTデータ取得
 		$add_cart_info = $this->request->data;
 
-		//カートの中身を呼び、配列に追加
-		$in_cart = CakeSession::read('in_cart');
-		if($in_cart === null){
-			$in_cart = array();
+		// カートに入れる個数が０ならセッションに入れない
+		if ($add_cart_info['add_cart_number'] != 0) {
+
+			//カートの中身を呼び、配列に追加
+			$in_cart = CakeSession::read('in_cart');
+			if($in_cart === null){
+				$in_cart = array();
+			}
+			$in_cart[] = array(
+				'item_id' => $add_cart_info['add_cart_id'],
+				'item_name' => $add_cart_info['add_cart_name'],
+				'item_price' => $add_cart_info['add_cart_price'],
+				'number' => $add_cart_info['add_cart_number']
+			);
+			CakeSession::write('in_cart', $in_cart);
+
 		}
-		$in_cart[] = array(
-			'item_id' => $add_cart_info['add_cart_id'],
-			'item_name' => $add_cart_info['add_cart_name'],
-			'item_price' => $add_cart_info['add_cart_price'],
-			'number' => $add_cart_info['add_cart_number']
-		);
-		CakeSession::write('in_cart', $in_cart);
 
 		$this->redirect('cart');
+
 	}
 
 	// カートの商品削除処理
@@ -270,13 +268,12 @@ class ShoppingController extends AppController{
 		foreach ($order_items as $order_item) {
 			// 在庫の数取得
 			$where = array(
-					'conditions' => array('id' => $order_item['id'])
+					'conditions' => array('id' => $order_item['item_id'])
 					);
 			$res = $this->stock_tbs->find('all', $where);
-
-			if ($res['stock_tbs']['number'] >= $order_item['number']) {
+			if ($res[0]['stock_tbs']['number'] >= $order_item['number']) {
 				// 在庫の数減らす
-				$sql = "
+				$sql1[] = "
 					UPDATE
 						stock_tbs
 					SET
@@ -285,23 +282,20 @@ class ShoppingController extends AppController{
 						stock_tbs.item_id = ".$order_item['item_id']."
 				";
 
-				$this->stock_tbs->query($sql);
-
 			}else {
 				echo "在庫の数が足りません";
 			}
 		}
-
-		// オーダーの合計金額＞ユーザー残金
+		// オーダーの合計金額<ユーザー残金
 		// ユーザー残金取得
 		$where = array(
 				'conditions' => array('id' => $order_account)
 				);
 		$res = $this->account_tbs->find('all',$where);
 
-		if ($res['account_tbs']['money'] >= $order_price) {
+		if ($res[0]['account_tbs']['money'] >= $order_price) {
 			// アカウントの残金減らす
-			$sql="
+			$sql2 ="
 				UPDATE
 					account_tbs
 				SET
@@ -310,27 +304,32 @@ class ShoppingController extends AppController{
 					account_tbs.id = ".$order_account."
 			";
 
-			$this->account_tbs->query($sql);
-
 		}else {
 			echo "残金が足りません";
 		}
 
-		// ヒストリーにいれる
-		foreach ($order_items as $order_item) {
-			$sql = "
-				INSERT INTO
-					history_tbs
-					(number, date, account_id, item_id)
-				VALUES
-					(".$order_item['number'].", NOW(), ".$order_account.", ".$order_item['item_id'].")
-			";
+		if (isset($sql1) && isset($sql2)) {
+			foreach ($sql1 as $sql) {
+				$this->stock_tbs->query($sql);
+			}
+			$this->account_tbs->query($sql2);
+			// ヒストリーにいれる
+			foreach ($order_items as $order_item) {
+				$sql = "
+					INSERT INTO
+						history_tbs
+						(number, date, account_id, item_id)
+					VALUES
+						(".$order_item['number'].", NOW(), ".$order_account.", ".$order_item['item_id'].")
+				";
 
-			$this->history_tbs->query($sql);
+				$this->history_tbs->query($sql);
+			}
+			// カートの中身を消す
+			CakeSession::delete('in_cart');
+		}else {
+			echo "failed";
 		}
-
-		// カートの中身を消す
-		CakeSession::delete('in_cart');
 
 		$this->redirect('shop');
 	}
