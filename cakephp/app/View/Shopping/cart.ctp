@@ -88,10 +88,13 @@
 		<!-- 合計金額表示 -->
 		合計：<?php echo $total_price ?>円
 	</div>
+
+	<?php if (isset($in_cart)): ?>
 	<div id="buy_btn_area" style="float:right">
 		<!-- 購入ボタン -->
 		<form class="buy_item_form" action="buy_items" method="POST" onsubmit="return order_check()">
 			<input type="submit" name="buy_item_btn" value="購入">
 		</form>
 	</div>
+	<?php endif; ?>
 </div>
