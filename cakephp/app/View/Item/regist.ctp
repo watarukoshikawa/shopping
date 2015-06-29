@@ -4,6 +4,11 @@
 		margin: 0 auto;
 	}
 </style>
+<?php
+	if(isset($msg) && $msg != ""){
+		echo $msg;
+	}
+?>
 <div id="main_area">
 	<?php if(isset($update_data)): ?>
 	<form action="/shopping/cakephp/item/run_update" method="POST" enctype="multipart/form-data">
