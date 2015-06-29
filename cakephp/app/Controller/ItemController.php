@@ -73,4 +73,38 @@ class ItemController extends AppController{
 		$this->index();
 
 	}
+
+	public function run_update(){
+
+		$this->loadModel('item_tb');
+		$data = array(	'id' => $this->data['item_id'],
+						'name' => $this->data['name'],
+						'text' => $this->data['text'],
+						'date' => date('Y-m-d H:i:s'),
+						'category_id' => $this->data['category_id'],
+						'price' => $this->data['price']
+			);
+		if($this->data['file']['name'] != ""){
+			if( move_uploaded_file( $this->data['file']['tmp_name'], IMAGES.$this->data['file']['name']) ){
+
+				$data = $data + array('img' => $this->data['file']['name'] );
+			}else{
+				$this->set('msg',"画像の変更に失敗しました");
+			}
+		}
+		var_dump($data);
+
+		$this->item_tb->save($data);
+
+		$this->index();
+
+	}
+
+
+
+
+
+
+
+
 }
