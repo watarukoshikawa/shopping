@@ -22,30 +22,37 @@ class ItemController extends AppController{
 	public function run_regist(){
 		//item_tbs への登録
 		$this->loadModel('item_tb');
-		$insert = 	array(
-						'name' => $this->request->data['name'],
-						'date' => date('Y-m-d H:i:s'),
-						'text' => $this->request->data['text'],
-						'price' => $this->request->data['price'],
-						'category_id' => $this->request->data['category_id']
-					);
-		$this->item_tb->set($insert);
+		if( move_uploaded_file( $this->data['file']['tmp_name'], IMAGES.$this->data['file']['name']) ){
+			
+			$insert = 	array(
+							'name' => $this->request->data['name'],
+							'date' => date('Y-m-d H:i:s'),
+							'text' => $this->request->data['text'],
+							'img' => $this->request->data['file']['name'],
+							'price' => $this->request->data['price'],
+							'category_id' => $this->request->data['category_id']
+						);
+			$this->item_tb->set($insert);
 
-		$this->item_tb->save();
+			$this->item_tb->save();
 
-		//stock_tbs への登録
-		$this->loadModel('stock_tb');
-		$insert =	array(
-						'number' => 0,
-						'item_id' => $this->item_tb->getLastInsertID(),
-						'date' => date('Y-m-d H:i:s')
-					);
-		$this->stock_tb->set($insert);	
-		$this->stock_tb->save();
+			//stock_tbs への登録
+			$this->loadModel('stock_tb');
+			$insert =	array(
+							'number' => 0,
+							'item_id' => $this->item_tb->getLastInsertID(),
+							'date' => date('Y-m-d H:i:s')
+						);
+			$this->stock_tb->set($insert);	
+			$this->stock_tb->save();
 
-		$this->set('msg', $this->request->data['name']."を登録しました");
+			$this->set('msg', $this->request->data['name']."を登録しました");
 
-		$this->index();
+			$this->index();
+		} else {
+		    $this->set('msg', "登録に失敗しました");
+		    $this->index();
+		}
 	}
 
 	public function update(){

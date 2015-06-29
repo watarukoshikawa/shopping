@@ -2,4 +2,4 @@
 	<input type="file" name="data[file]" value="">
 	<input type="submit" value="go">
 </form>
-<?php echo $this->Html->image('tet.jpeg',array('alt' => 'tet')); ?>
+<?php echo $this->Html->image('test1.jpeg',array('alt' => 'tet')); ?>
