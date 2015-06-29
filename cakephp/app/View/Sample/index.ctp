@@ -6,4 +6,7 @@
 	</form>
 
 </div>
-<img src="<?php echo IMAGES.$src ;?>" style="wisth:100px; height:100px;">
+<img src="/Users/watarukoshikawa/Documents/tet.jpeg" style="wisth:100px; height:100px;">
+<pre>
+<?php var_dump(IMAGES.$src); ?>
+</pre>

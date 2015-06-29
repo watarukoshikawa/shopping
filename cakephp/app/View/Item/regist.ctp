@@ -8,7 +8,7 @@
 	<?php if(isset($update_data)): ?>
 	<form action="/shopping/cakephp/item/run_update" method="POST">
 	<?php else: ?>
-	<form action="/shopping/cakephp/item/run_regist" method="POST">
+	<form action="/shopping/cakephp/item/run_regist" method="POST" enctype=" multipart/form-data">
 	<?php endif; ?>
 		<p>商品名</p>
 		<input type="text" name="name" value="<?php if(isset($update_data)){ echo $update_data['item_tb']['name'];}; ?>">
@@ -26,6 +26,7 @@
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</select>
+		<input type="file" name="img" style="width:300px; margin-left: -5px;">
 		<input type="submit" value="<?php if(isset($update_data)){ echo '変更';}else{ echo '登録';}; ?>">
 	</form>
 </div>

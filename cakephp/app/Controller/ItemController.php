@@ -1,6 +1,7 @@
 <?php
 
 APP::uses('AppController', 'Controller');
+App::uses('File', 'Utility');
 
 class ItemController extends AppController{
 

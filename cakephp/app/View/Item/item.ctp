@@ -41,7 +41,9 @@
 			</tr>
 			<?php foreach($table_data as $data): ?>
 			<tr>
-				<td>画像</td>
+				<td>
+					<img src="<?php echo IMAGES.$data['item_tb']['img']; ?>">
+				</td>
 				<td><a href="/shopping/cakephp/item/update?update=<?php echo $data['item_tb']['id'] ?>"><?php echo $data['item_tb']['name'] ?></a></td>
 				<td>
 					<form action="/shopping/cakephp/item/run_delete" method="POST">
