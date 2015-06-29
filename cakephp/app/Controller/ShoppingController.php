@@ -1,6 +1,7 @@
 <?php
 
 APP::uses('AppController', 'Controller');
+APP::uses('File', 'Utility');
 
 class ShoppingController extends AppController{
 
@@ -35,27 +36,35 @@ class ShoppingController extends AppController{
 		// POSTデータ取得
 		$login_data = $this->request->data;
 
-		// ログインデータをＤＢと比較
-		$where = array(
-			'conditions' => array('id' => $login_data['login_id'],
-			'pass' => $login_data['login_pass'])
-		);
-		$res = $this->account_tbs->find('first',$where);
-		// ログインチェック
-		if (count($res) > 0) {
-			// ログイン成功
-			// セッション保存
-			CakeSession::write('account_id', $res['account_tbs']['id']);
-			CakeSession::write('account_name', $res['account_tbs']['name']);
-			$this->redirect('shop');
+		// ログインボタンを経由してきたか
+		if (isset($login_data['login_btn'])) {
+
+			// ログインデータをＤＢと比較
+			$where = array(
+				'conditions' => array('id' => $login_data['login_id'],
+				'pass' => $login_data['login_pass'])
+			);
+			$res = $this->account_tbs->find('first',$where);
+			// ログインチェック
+			if (count($res) > 0) {
+				// ログイン成功
+				// セッション保存
+				CakeSession::write('account_id', $res['account_tbs']['id']);
+				CakeSession::write('account_name', $res['account_tbs']['name']);
+				$this->redirect('shop');
+			}else {
+				// ログイン失敗
+				$this->redirect('login?login=failed');
+			}
+
 		}else {
-			// ログイン失敗
-			$this->redirect('login?login=failed');
+			$this->redirect('login');
 		}
 	}
 
 	// ログアウト処理
 	public function run_logout(){
+
 		CakeSession::delete('account_id');
 		CakeSession::delete('account_name');
 		CakeSession::delete('in_cart');
@@ -97,6 +106,7 @@ class ShoppingController extends AppController{
 			SELECT
 				item_tbs.id AS item_id,
 				item_tbs.name AS item_name,
+				item_tbs.img AS item_img,
 				category_tbs.name AS category_name
 			FROM
 				item_tbs
@@ -127,6 +137,7 @@ class ShoppingController extends AppController{
 			SELECT
 				item_tbs.id AS item_id,
 				item_tbs.name AS item_name,
+				item_tbs.img AS item_img,
 				category_tbs.name AS category_name
 			FROM
 				item_tbs
@@ -185,7 +196,6 @@ class ShoppingController extends AppController{
 			$this->redirect('login');
 		}
 
-
 		// モデルロード
 		$this->loadModel('item_tbs');
 
@@ -203,6 +213,7 @@ class ShoppingController extends AppController{
 					item_tbs.name AS item_name,
 					item_tbs.price AS item_price,
 					item_tbs.text AS item_text,
+					item_tbs.img AS item_img,
 					stock_tbs.number AS item_stock
 				FROM
 					item_tbs
@@ -240,6 +251,7 @@ class ShoppingController extends AppController{
 					'item_id' => $add_cart_info['add_cart_id'],
 					'item_name' => $add_cart_info['add_cart_name'],
 					'item_price' => $add_cart_info['add_cart_price'],
+					'item_img' => $add_cart_info['add_cart_img'],
 					'number' => $add_cart_info['add_cart_number']
 				);
 			}

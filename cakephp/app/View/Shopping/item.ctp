@@ -5,12 +5,12 @@
 		margin: 20px auto;
 	}
 	div#image_box{
-		width: 1000px;
-		margin: 50px auto;
+		width: 500px;
+		margin: 100px auto 20px;
 	}
 	div#table_area{
 		width: 600px;
-		margin: 50px auto;
+		margin: 20px auto;
 	}
 	div#add_cart_area{
 		width: 600px;
@@ -42,7 +42,11 @@
 
 <!-- 商品情報表示 -->
 <div id="image_box">
-	<!-- 写真を表示予定 -->
+	<?php
+		if ($item_info['item_tbs']['item_img'] != "") {
+			echo $this->Html->image($item_info['item_tbs']['item_img'], array('width' => '500px', 'height' => '400px'));
+		}
+	?>
 </div>
 
 <div id="table_area">
@@ -68,6 +72,7 @@
 		<input type="hidden" name="add_cart_id" value="<?php echo $item_info['item_tbs']['item_id']; ?>">
 		<input type="hidden" name="add_cart_name" value="<?php echo $item_info['item_tbs']['item_name']; ?>">
 		<input type="hidden" name="add_cart_price" value="<?php echo $item_info['item_tbs']['item_price']; ?>">
+		<input type="hidden" name="add_cart_img" value="<?php echo $item_info['item_tbs']['item_img']; ?>">
 			<select name="add_cart_number">
 				<option>0</option>
 				<?php for ($i=0; $i < $item_info['stock_tbs']['item_stock']; $i++) {
