@@ -43,11 +43,15 @@
 			<tr>
 				<td>
 					<?php
-						echo $this->Html->image($data['item_tb']['img'],
-												array(	'alt' => $data['item_tb']['img'],
-														'width' => "50px",
-														'height' => "50px"
-													));
+						if(isset($data['item_tb']['img']) && $data['item_tb']['img'] != ""){
+							echo $this->Html->image($data['item_tb']['img'],
+													array(	'alt' => $data['item_tb']['img'],
+															'width' => "50px",
+															'height' => "50px"
+														));
+						}else{
+							echo "no image";
+						}
 					?>
 				</td>
 				<td><a href="/shopping/cakephp/item/update?update=<?php echo $data['item_tb']['id'] ?>"><?php echo $data['item_tb']['name'] ?></a></td>
