@@ -61,19 +61,19 @@
 	<?php foreach ($in_cart as $session_id => $in_cart_item): ?>
 	<table>
 		<tr>
+			<td rowspan="3" style="width:100px;"><?php echo $this->Html->image($in_cart_item['item_img'], array('width' => '100px', 'height' => '100px')); ?></td>
 			<td>商品名：</td><td><?php echo $in_cart_item['item_name']; ?></td>
+
 		</tr>
 		<tr>
 			<td>金額：</td><td><?php echo $in_cart_item['item_price']; ?></td>
 		</tr>
 		<tr>
 			<td>個数：</td><td><?php echo $in_cart_item['number']; ?></td>
-		</tr>
-		<tr>
-			<td colspan="2">
+			<td rowspan="3" style="width:70px;">
 				<form class="delete_cart_form" action="delete_cart" method="POST">
 					<input type="hidden" name="delete_item" value="<?php echo $session_id; ?>">
-					<input type="submit" name="delete_cart_btn" value="削除">
+					<input type="submit" name="delete_cart_btn" value="カートから削除" >
 				</form>
 			</td>
 		</tr>

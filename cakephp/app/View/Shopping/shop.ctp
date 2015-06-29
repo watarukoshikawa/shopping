@@ -1,12 +1,16 @@
 
 <style>
 	div#header_btn{
-		width: 1000px;
+		width: 800px;
 		margin: 20px auto;
 	}
 	div#table_area{
-		width: 1000px;
+		width: 800px;
 		margin: 20px auto;
+	}
+	div#table_area td{
+		height: 50px;
+		text-align: center;
 	}
 	div#search_area{
 		width: 500px;
@@ -14,7 +18,6 @@
 	}
 	div#msg_box{
 		text-align: center;
-
 	}
 	div#msg_box{
 		text-align: center;
@@ -44,6 +47,10 @@
 			<input type="submit" name="logout_btn" value="ログアウト">
 		</form>
 	</div>
+	<!-- ショップボタン -->
+	<div style="float:left; padding-left:250px; font-size:20px;">
+		<h1>ショップ</h1>
+	</div>
 	<!-- カートボタン -->
 	<div style="float:right">
 		<form class="cart_btn_form" action="cart" method="POST">
@@ -62,17 +69,17 @@
 					<select name="category_select">
 						<option value="all">全て</option>
 						<?php foreach ($categories as $category): ?>
-							<option value="<?php echo $category['category_tbs']['name']; ?>">
-								<?php echo $category['category_tbs']['name']; ?>
-							</option>
+						<option value="<?php echo $category['category_tbs']['name']; ?>">
+							<?php echo $category['category_tbs']['name']; ?>
+						</option>
 						<?php endforeach; ?>
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<td>在庫：</td>
-				<td><input type="radio" name="stock" value="yes">あり</td>
-				<td><input type="radio" name="stock" value="all" checked="checked">全て</td>
+				<td><input type="radio" name="stock" value="all" checked>全て</td>
+				<td><input type="radio" name="stock" value="yes">在り</td>
 			</tr>
 			<tr>
 				<td colspan="3" style="text-align:center"><input type="submit" name="search_shop_btn" value="検索"></td>
@@ -90,12 +97,16 @@
 		<?php foreach($items as $item): ?>
 		<tr>
 			<td>
-				<!-- 写真表示予定 -->
+				<?php
+					if ($item['item_tbs']['item_img'] != "") {
+						echo $this->Html->image($item['item_tbs']['item_img'], array('width' => '50px', 'height' => '50px'));
+					}
+				?>
 			</td>
-			<td>
+			<td style="line-height:50px;">
 				<?php echo $item['category_tbs']['category_name'];?>
 			</td>
-			<td>
+			<td style="line-height:50px;">
 				<a href="item?item=<?php echo $item['item_tbs']['item_id']; ?>">
 					<?php echo $item['item_tbs']['item_name']; ?>
 				</a>
