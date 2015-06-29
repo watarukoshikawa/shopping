@@ -124,6 +124,12 @@ class ShoppingController extends AppController{
 		//POSTデータ取得
 		$search_data = $this->request->data;
 
+		//検索ボタンを経由してきたか
+		if (isset($search_data['search_shop_btn'])) {
+
+		}else {
+			$this->redirect('shop');
+		}
 		//モデルロード
 		$this->loadModel('item_tbs');
 		$this->loadModel('category_tbs');
@@ -156,7 +162,6 @@ class ShoppingController extends AppController{
 		if ($search_data['category_select'] == 'all') {
 			// 全ての場合
 			$mode_where = 0;
-
 		}else {
 			$mode_where = 1;
 			$sql .= "

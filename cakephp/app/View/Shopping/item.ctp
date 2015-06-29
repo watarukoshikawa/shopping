@@ -18,7 +18,6 @@
 	}
 </style>
 
-
 <div id="header_btn">
 	<div style="float:left;">
 		<!-- ログアウトボタン -->

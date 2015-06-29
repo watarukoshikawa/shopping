@@ -61,7 +61,13 @@
 	<?php foreach ($in_cart as $session_id => $in_cart_item): ?>
 	<table>
 		<tr>
-			<td rowspan="3" style="width:100px;"><?php echo $this->Html->image($in_cart_item['item_img'], array('width' => '100px', 'height' => '100px')); ?></td>
+			<td rowspan="3" style="width:100px;">
+				<?php
+					if ($in_cart_item['item_img'] != "") {
+						echo $this->Html->image($in_cart_item['item_img'], array('width' => '100px', 'height' => '100px'));
+					}
+				 ?>
+			</td>
 			<td>商品名：</td><td><?php echo $in_cart_item['item_name']; ?></td>
 
 		</tr>
